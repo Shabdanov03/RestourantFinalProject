@@ -17,6 +17,7 @@ import static jakarta.persistence.CascadeType.DETACH;
 @Table(name = "cheques")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Setter
 @Builder
@@ -35,7 +36,7 @@ public class Cheque {
     private Long id;
     private int priceAverage;
     private LocalDate createdAt;
-    @ManyToMany(mappedBy = "cheques",cascade = {PERSIST,MERGE,REFRESH,DETACH})
+    @ManyToMany(mappedBy = "cheques",cascade = {PERSIST,MERGE,REFRESH,DETACH},fetch = FetchType.LAZY)
     private List<MenuItem> menuItems;
     @ManyToOne(cascade = {PERSIST,MERGE,REFRESH,DETACH})
     private User user;

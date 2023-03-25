@@ -221,7 +221,7 @@ public class UserServiceImpl implements UserService {
         oldUser.setLastName(user.lastName());
         oldUser.setDateOfBirth(user.dateOfBirth());
         oldUser.setEmail(user.email());
-        oldUser.setPassword(user.password());
+        oldUser.setPassword(passwordEncoder.encode(user.password()));
         oldUser.setPhoneNumber(user.phoneNumber());
         oldUser.setRole(user.role());
         oldUser.setExperience(user.experience());
@@ -335,6 +335,7 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
     }
+
 
 
 }

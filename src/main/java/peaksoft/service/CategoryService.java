@@ -4,7 +4,6 @@ import peaksoft.dto.request.CategoryRequest;
 import peaksoft.dto.response.SimpleResponse;
 import peaksoft.dto.response.categoryResponse.CategoryResponse;
 import peaksoft.dto.response.categoryResponse.CategoryResponseById;
-import peaksoft.dto.response.restaurantResponse.RestaurantResponseById;
 import peaksoft.entity.Category;
 
 import java.util.List;

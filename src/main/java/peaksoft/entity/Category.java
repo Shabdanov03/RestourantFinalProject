@@ -13,13 +13,12 @@ import static jakarta.persistence.CascadeType.ALL;
 @Entity
 @Table(name = "categories")
 @AllArgsConstructor
+@EqualsAndHashCode
 @NoArgsConstructor
 @Getter
 @Setter
 @Builder
 public class Category {
-
-
     @Id
     @SequenceGenerator(
             name = "categories_id_gen",

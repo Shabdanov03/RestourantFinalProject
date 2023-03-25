@@ -1,5 +1,8 @@
 package peaksoft.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +27,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("select new peaksoft.dto.response.userResponse.UserResponseById" +
             "(u.id,u.firstName,u.lastName,u.dateOfBirth,u.email,u.password,u.phoneNumber,u.role,u.experience) from User u where u.excepted = false ")
     List<UserResponseById> findAllUsersByExceptIsFalse();
+
+
 }

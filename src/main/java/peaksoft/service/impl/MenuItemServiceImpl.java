@@ -2,9 +2,14 @@ package peaksoft.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import peaksoft.dto.request.MenuItemRequest;
+import peaksoft.dto.response.PaginationResponse;
 import peaksoft.dto.response.SimpleResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemGlobalSearchResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemResponse;
@@ -18,8 +23,8 @@ import peaksoft.repository.RestaurantRepository;
 import peaksoft.repository.SubcategoryRepository;
 import peaksoft.service.MenuItemService;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Shabdanov Ilim
@@ -73,7 +78,10 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     @Override
     public List<MenuItemResponse> getAllMenuItems() {
-        return menuItemRepository.getAllMenuItems();
+        List<MenuItemResponse> list = new ArrayList<>();
+        list.addAll(menuItemRepository.getAllMenuItems());
+        list.addAll(menuItemRepository.getAllByStopListNull());
+        return list;
     }
 
     @Override
@@ -144,5 +152,17 @@ public class MenuItemServiceImpl implements MenuItemService {
     @Override
     public List<MenuItemResponse> filterMenuItemsByIsVegetarian(boolean isVegan) {
         return menuItemRepository.filterMenuItemsByIsVegetarian(isVegan);
+    }
+
+    @Override
+    public PaginationResponse getMenuItemPagination(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page-1, size, Sort.by("price"));
+        Page<MenuItemResponse> itemPage = menuItemRepository.getAllPageable(pageable);
+        return new PaginationResponse(
+                itemPage.getContent(),
+                itemPage.getNumber()+1,
+                itemPage.getTotalPages()
+        );
     }
 }

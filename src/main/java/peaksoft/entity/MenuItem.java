@@ -16,6 +16,7 @@ import static jakarta.persistence.CascadeType.DETACH;
 @Table(name = "menuItems")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Setter
 @Builder

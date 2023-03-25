@@ -45,7 +45,6 @@ public class SubcategoryServiceImpl implements SubcategoryService {
         Category category = categoryRepository.findById(subCategoryRequest.categoryId()).orElseThrow(() ->
                 new NotFoundException("Restaurant with id: " + subCategoryRequest.categoryId() + " not found"));
 
-
         SubCategory subCategory = SubCategory.builder()
                 .name(subCategoryRequest.name())
                 .category(category)

@@ -7,6 +7,7 @@ import java.time.LocalDate;
  **/
 public record ChequeRestaurantRequest(
         Long restaurantId,
+
         LocalDate date
 ) {
 }

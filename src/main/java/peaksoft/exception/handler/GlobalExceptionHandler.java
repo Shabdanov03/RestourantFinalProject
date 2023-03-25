@@ -1,10 +1,15 @@
 package peaksoft.exception.handler;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import peaksoft.exception.*;
+
+import java.util.stream.Collectors;
 
 /**
  * Shabdanov Ilim
@@ -51,4 +56,19 @@ public class GlobalExceptionHandler {
                 e.getMessage()
         );
     }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionResponse handlerMethodArgumentNotValidException(MethodArgumentNotValidException e){
+
+        BindingResult bindingResult = e.getBindingResult();
+        String error = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("; "));
+        return new ExceptionResponse(
+                HttpStatus.BAD_REQUEST,
+                e.getClass().getSimpleName(),
+                error
+        );
+    }
+
+
 }

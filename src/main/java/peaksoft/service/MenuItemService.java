@@ -3,6 +3,7 @@ package peaksoft.service;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import peaksoft.dto.request.MenuItemRequest;
+import peaksoft.dto.response.PaginationResponse;
 import peaksoft.dto.response.SimpleResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemGlobalSearchResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemResponse;
@@ -29,4 +30,7 @@ public interface MenuItemService {
     List<MenuItemResponse> sortByMenuItemPriceAscOrDesc(String ascOrDesc);
 
     List<MenuItemResponse> filterMenuItemsByIsVegetarian(boolean isVegan);
+
+    PaginationResponse getMenuItemPagination(int page, int size);
+
 }

@@ -2,12 +2,9 @@ package peaksoft.service;
 
 import peaksoft.dto.request.SubCategoryRequest;
 import peaksoft.dto.response.SimpleResponse;
-import peaksoft.dto.response.categoryResponse.CategoryResponse;
-import peaksoft.dto.response.categoryResponse.CategoryResponseById;
 import peaksoft.dto.response.subCategoryResponse.SubCategoryResponseById;
 import peaksoft.dto.response.subCategoryResponse.SubCategoryResponseGroupCategory;
 import peaksoft.dto.response.subCategoryResponse.SubcategoryResponse;
-import peaksoft.entity.Category;
 import peaksoft.entity.SubCategory;
 
 import java.util.List;

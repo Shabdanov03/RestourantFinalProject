@@ -11,7 +11,6 @@ import peaksoft.dto.response.SimpleResponse;
 import peaksoft.dto.response.chequeResponse.ChequeResponse;
 import peaksoft.dto.response.chequeResponse.ChequeTotalByWaiterResponse;
 import peaksoft.dto.response.chequeResponse.ChequeTotalResponse;
-import peaksoft.dto.response.menuItemResponse.MenuItemResponse;
 import peaksoft.entity.Cheque;
 import peaksoft.entity.MenuItem;
 import peaksoft.entity.Restaurant;
@@ -163,6 +162,13 @@ public class ChequeServiceImpl implements ChequeService {
                     .build();
         }
 
+        Cheque cheque = chequeRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("Cheque with id: %s not found", id)));
+        for (int i = 0; i < cheque.getMenuItems().size(); i++) {
+            cheque.getMenuItems().get(i).getCheques().remove(cheque);
+        }
+        List<Cheque> chequeList = cheque.getUser().getCheques();
+        chequeList.removeIf(x->x.getId().equals(id));
 
         chequeRepository.deleteById(id);
 

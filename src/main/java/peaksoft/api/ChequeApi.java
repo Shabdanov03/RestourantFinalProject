@@ -55,10 +55,10 @@ public class ChequeApi {
         return chequeService.deleteChequeById(chequeId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_WALTER"})
-    @PutMapping("/{id}")
-    SimpleResponse updateCheque(@RequestBody ChequeRequest chequeRequest,@PathVariable Long id){
-        return chequeService.updateCheque(id,chequeRequest);
-    }
+//    @RolesAllowed({"ROLE_ADMIN", "ROLE_WALTER"})
+//    @PutMapping("/{id}")
+//    SimpleResponse updateCheque(@RequestBody ChequeRequest chequeRequest,@PathVariable Long id){
+//        return chequeService.updateCheque(id,chequeRequest);
+//    }
 
 }

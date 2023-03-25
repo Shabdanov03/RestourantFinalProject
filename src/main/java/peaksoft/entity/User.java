@@ -18,9 +18,10 @@ import static jakarta.persistence.CascadeType.DETACH;
  * Shabdanov Ilim
  **/
 @Entity
-@Table(name = "users")
+@Table(name = "menuItemResponses")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Getter
 @Setter
 @Builder
