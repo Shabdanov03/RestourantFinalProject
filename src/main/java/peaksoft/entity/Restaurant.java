@@ -11,7 +11,6 @@ import static jakarta.persistence.CascadeType.ALL;
 @Table(name = "restaurants")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Setter
 @Builder

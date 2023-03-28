@@ -3,6 +3,7 @@ package peaksoft.api;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.SubCategoryRequest;
 import peaksoft.dto.response.SimpleResponse;
@@ -29,43 +30,43 @@ public class SubCategoryApi {
         this.subcategoryService = subcategoryService;
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    private SimpleResponse saveSubCategory(@RequestBody @Valid SubCategoryRequest subCategoryRequest) {
+    public SimpleResponse saveSubCategory(@RequestBody @Valid SubCategoryRequest subCategoryRequest) {
         return subcategoryService.saveSubcategory(subCategoryRequest);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
-    private List<SubcategoryResponse> getAllSubCategories() {
+    public List<SubcategoryResponse> getAllSubCategories() {
         return subcategoryService.getAllSubCategories();
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/order/{categoryId}")
-    private List<SubcategoryResponse> getAllSubCategoryOrderByCategoryName(@PathVariable Long categoryId) {
+    public List<SubcategoryResponse> getAllSubCategoryOrderByCategoryName(@PathVariable Long categoryId) {
         return subcategoryService.getAllSubCategoryOrderByCategoryName(categoryId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/group")
-    private Map<String,List<SubCategoryResponseGroupCategory>> groupingByCategories() {
+    public Map<String,List<SubCategoryResponseGroupCategory>> groupingByCategories() {
         return subcategoryService.groupingByCategories();
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{subCategoryId}")
     public SubCategoryResponseById getSubCategoryById(@PathVariable Long subCategoryId) {
         return subcategoryService.getSubCategoriesById(subCategoryId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{subCategoryId}")
     public SimpleResponse deleteSubCategoryById(@PathVariable Long subCategoryId) {
         return subcategoryService.deleteSubCategoriesBiId(subCategoryId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{subCategoryId}")
     public SimpleResponse updateSubCategory(@RequestBody SubCategory subCategory, @PathVariable Long subCategoryId) {
         return subcategoryService.updateSubCategory(subCategoryId, subCategory);

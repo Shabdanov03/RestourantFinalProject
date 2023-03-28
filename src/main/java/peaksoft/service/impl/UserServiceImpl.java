@@ -144,7 +144,6 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
-
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message("User successfully saved in restaurant!")
@@ -169,8 +168,15 @@ public class UserServiceImpl implements UserService {
                     .httpStatus(HttpStatus.NOT_FOUND)
                     .message("User with id : " + id + " doesn't exist")
                     .build();
+
         }
-        userRepository.deleteById(id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("User with id : " + id + " doesn't exist"));
+
+        user.getCheques().forEach(x -> x.getMenuItems().forEach(menuItem -> menuItem.setCheques(null)));
+
+        userRepository.delete(user);
+
         return SimpleResponse.builder()
                 .httpStatus(HttpStatus.OK)
                 .message(String.format("User with id : " + id + " successfully deleted ...!"))
@@ -306,36 +312,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserAcceptResponse acceptApplication(Long id, boolean except) {
-            if (id == null) {
+        if (id == null) {
             return UserAcceptResponse.builder()
                     .httpStatus(HttpStatus.OK)
                     .message("No accepted..!")
                     .users(userRepository.findAllUsersByExceptIsFalse())
                     .build();
         }
-        if (except){
+        if (except) {
             User user = userRepository.findById(id).
                     orElseThrow(() -> new NotFoundException("User with id : " + id + " doesn't exist"));
 
             user.setRestaurant(restaurantRepository.findById(1L).
-                    orElseThrow(()->new NotFoundException("Restaurant with id:"+1+" not found..!")));
+                    orElseThrow(() -> new NotFoundException("Restaurant with id:" + 1 + " not found..!")));
             user.setExcepted(true);
             return UserAcceptResponse.builder()
                     .httpStatus(HttpStatus.ACCEPTED)
-                    .message(String.format("user with id : %s successfully accepted",id))
+                    .message(String.format("user with id : %s successfully accepted", id))
                     .users(List.of(userRepository.getUserById(id).
-                            orElseThrow(()-> new NotFoundException("User with id:"+id+" not found..!"))))
+                            orElseThrow(() -> new NotFoundException("User with id:" + id + " not found..!"))))
                     .build();
-        }
-        else {
+        } else {
             userRepository.deleteById(id);
             return UserAcceptResponse.builder()
                     .httpStatus(HttpStatus.OK)
-                    .message(String.format("user with id : %s not accepted..!",id))
+                    .message(String.format("user with id : %s not accepted..!", id))
                     .build();
         }
     }
-
 
 
 }

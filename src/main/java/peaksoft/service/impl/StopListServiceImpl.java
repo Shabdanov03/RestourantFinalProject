@@ -69,20 +69,20 @@ public class StopListServiceImpl implements StopListService {
     }
 
     @Override
-    public SimpleResponse updateStopList(Long id, StopList stopList) {
+    public SimpleResponse updateStopList(Long id, StopListRequest stopList) {
         StopList oldStopList = stopListRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("StopList with id : " + id + " doesn't exist"));
         boolean exists = stopListRepository.existsByDateAndMenuItem_NameAndId(oldStopList.getDate(), oldStopList.getMenuItem().getName(), oldStopList.getId());
 
-        if (exists) {
+        if (!exists) {
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
-                    .message(String.format("The MenuItem with id %s has already been saved to the stop list on this date", stopList.getId()))
+                    .message(String.format("The MenuItem with id %s has already been saved to the stop list on this date", stopList.menuItemId()))
                     .build();
         }
 
-        oldStopList.setReason(stopList.getReason());
-        oldStopList.setDate(stopList.getDate());
+        oldStopList.setReason(stopList.reason());
+        oldStopList.setDate(stopList.date());
 
         stopListRepository.save(oldStopList);
         return SimpleResponse.builder()

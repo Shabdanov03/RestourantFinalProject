@@ -31,6 +31,7 @@ public class RestaurantApi {
     public SimpleResponse saveRestaurant(@RequestBody @Valid RestaurantRequest restaurantRequest) {
         return restaurantService.saveRestaurant(restaurantRequest);
     }
+
     @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<RestaurantResponse> getAllRestaurant() {

@@ -18,10 +18,9 @@ import static jakarta.persistence.CascadeType.DETACH;
  * Shabdanov Ilim
  **/
 @Entity
-@Table(name = "menuItemResponses")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Setter
 @Builder
@@ -45,7 +44,7 @@ public class User implements UserDetails {
     private Role role;
     private int experience;
     private boolean excepted;
-    @OneToMany(mappedBy = "user", cascade = {PERSIST, MERGE, REFRESH, DETACH})
+    @OneToMany(mappedBy = "user",cascade = ALL)
     private List<Cheque> cheques;
     @ManyToOne(cascade = {PERSIST, MERGE, REFRESH, DETACH})
     private Restaurant restaurant;

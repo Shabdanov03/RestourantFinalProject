@@ -60,7 +60,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionResponse handlerMethodArgumentNotValidException(MethodArgumentNotValidException e){
-
         BindingResult bindingResult = e.getBindingResult();
         String error = bindingResult.getAllErrors().stream().map(ObjectError::getDefaultMessage).collect(Collectors.joining("; "));
         return new ExceptionResponse(

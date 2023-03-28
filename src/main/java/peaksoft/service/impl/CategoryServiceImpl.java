@@ -14,7 +14,6 @@ import peaksoft.repository.CategoryRepository;
 import peaksoft.service.CategoryService;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Shabdanov Ilim

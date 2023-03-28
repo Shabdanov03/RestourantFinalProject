@@ -1,8 +1,8 @@
 package peaksoft.api;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.MenuItemRequest;
 import peaksoft.dto.response.PaginationResponse;
@@ -28,56 +28,57 @@ public class MenuItemApi {
         this.menuItemService = menuItemService;
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @PostMapping
-    private SimpleResponse saveMenuItem(@RequestBody @Valid MenuItemRequest menuItemRequest) {
+    public SimpleResponse saveMenuItem(@RequestBody @Valid MenuItemRequest menuItemRequest) {
         return menuItemService.saveMenuItem(menuItemRequest);
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_CHEF", "ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @GetMapping
-    private List<MenuItemResponse> getAllMenuItems() {
+    public List<MenuItemResponse> getAllMenuItems() {
         return menuItemService.getAllMenuItems();
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @GetMapping("/{menuItemId}")
     public MenuItemResponseById getMenuItemById(@PathVariable Long menuItemId) {
         return menuItemService.getMenuItemById(menuItemId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @DeleteMapping("/{menuItemId}")
     public SimpleResponse deleteMenuitemById(@PathVariable Long menuItemId) {
         return menuItemService.deleteMenuItemById(menuItemId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @PutMapping("/{menuItemId}")
     public SimpleResponse updateMenuItem(@RequestBody MenuItem menuItem, @PathVariable Long menuItemId) {
         return menuItemService.updateMenuItem(menuItemId, menuItem);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/search")
     public List<MenuItemGlobalSearchResponse> globalSearchMenuItems(@RequestParam(required = false) String word) {
         return menuItemService.globalSearchMenuItems(word);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/sort")
     public List<MenuItemResponse> sortByMenuItemPriceAscOrDesc(@RequestParam(required = false, defaultValue = "asc") String ascOrDesc) {
         return menuItemService.sortByMenuItemPriceAscOrDesc(ascOrDesc);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/filter")
     public List<MenuItemResponse> filterMenuItemsByIsVegetarian(@RequestParam(required = false, defaultValue = "false") boolean isVegan) {
         return menuItemService.filterMenuItemsByIsVegetarian(isVegan);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @GetMapping("/pagination")
-    public PaginationResponse pagination(@RequestParam int page, @RequestParam int size) {
+    public PaginationResponse pagination(@RequestParam(required = false,defaultValue = "2" ) int page, @RequestParam(required = false,defaultValue = "2") int size) {
         return menuItemService.getMenuItemPagination(page, size);
     }
 

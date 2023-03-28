@@ -1,5 +1,6 @@
 package peaksoft.dto.request;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Past;
 
 import java.time.LocalDate;
@@ -9,7 +10,7 @@ import java.time.LocalDate;
  **/
 public record StopListRequest(
         String reason,
-        @Past(message = "Date must be in the past")
+        @FutureOrPresent(message = "Date not must be in the past")
         LocalDate date,
         Long menuItemId
 ) {

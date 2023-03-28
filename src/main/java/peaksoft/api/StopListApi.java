@@ -3,6 +3,7 @@ package peaksoft.api;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.StopListRequest;
 import peaksoft.dto.response.SimpleResponse;
@@ -25,33 +26,33 @@ public class StopListApi {
         this.stopListService = stopListService;
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @PostMapping
-    private SimpleResponse saveStopList(@RequestBody @Valid StopListRequest stopListRequest) {
+    public SimpleResponse saveStopList(@RequestBody @Valid StopListRequest stopListRequest) {
         return stopListService.saveStopList(stopListRequest);
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF","ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @GetMapping
-    private List<StopListResponse> getAllStopLists() {
+    public List<StopListResponse> getAllStopLists() {
         return stopListService.getAllStopList();
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF","ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @GetMapping("/{stopListId}")
     public StopListResponse getStopListById(@PathVariable Long stopListId) {
         return stopListService.getStopListById(stopListId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF')")
     @DeleteMapping("/{stopListId}")
     public SimpleResponse deleteStopListById(@PathVariable Long stopListId) {
         return stopListService.deleteStopListById(stopListId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF","ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @PutMapping("/{stopListId}")
-    public SimpleResponse updateStopList(@RequestBody StopList stopList, @PathVariable Long stopListId) {
+    public SimpleResponse updateStopList(@RequestBody StopListRequest stopList, @PathVariable Long stopListId) {
         return stopListService.updateStopList(stopListId,stopList);
     }
 }

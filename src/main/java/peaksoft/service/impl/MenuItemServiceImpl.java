@@ -53,6 +53,14 @@ public class MenuItemServiceImpl implements MenuItemService {
         SubCategory subCategory = subcategoryRepository.findById(menuItemRequest.subCategoryId())
                 .orElseThrow(() -> new NotFoundException("SubCategory with id: " + menuItemRequest.restaurantId() + " not found"));
 
+        if (menuItemRepository.existsByName(menuItemRequest.name())) {
+            return SimpleResponse.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(String.format("MenuItem with name : %s already exists",
+                            menuItemRequest.name()))
+                    .build();
+        }
+
         if (menuItemRequest.price() <= 0){
             return SimpleResponse.builder()
                     .httpStatus(HttpStatus.BAD_REQUEST)
@@ -159,10 +167,12 @@ public class MenuItemServiceImpl implements MenuItemService {
 
         Pageable pageable = PageRequest.of(page-1, size, Sort.by("price"));
         Page<MenuItemResponse> itemPage = menuItemRepository.getAllPageable(pageable);
-        return new PaginationResponse(
-                itemPage.getContent(),
-                itemPage.getNumber()+1,
-                itemPage.getTotalPages()
-        );
+
+        List<MenuItemResponse> list = itemPage.getContent().stream().map(m -> new MenuItemResponse(m.id(), m.name(), m.image(), m.price(), m.isVegetarian())).toList();
+        PaginationResponse response = new PaginationResponse();
+        response.setMenuItemResponses(list);
+        response.setCurrentPage(itemPage.getNumber()+1);
+        response.setPageSize(itemPage.getSize());
+        return response;
     }
 }

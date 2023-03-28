@@ -14,7 +14,7 @@ public interface StopListService {
     SimpleResponse saveStopList(StopListRequest stopListRequest);
     List<StopListResponse> getAllStopList();
     StopListResponse getStopListById(Long id);
-    SimpleResponse updateStopList(Long id, StopList stopList);
+    SimpleResponse updateStopList(Long id, StopListRequest stopList);
     SimpleResponse deleteStopListById(Long id);
 
 }

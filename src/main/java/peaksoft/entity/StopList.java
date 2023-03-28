@@ -15,7 +15,6 @@ import static jakarta.persistence.CascadeType.DETACH;
 @Table(name = "stop_lists")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Setter
 @Builder

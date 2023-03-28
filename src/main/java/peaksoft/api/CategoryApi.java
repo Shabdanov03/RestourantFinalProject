@@ -1,6 +1,6 @@
 package peaksoft.api;
 
-import jakarta.annotation.security.RolesAllowed;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.CategoryRequest;
 import peaksoft.dto.response.SimpleResponse;
@@ -23,31 +23,31 @@ public class CategoryApi {
         this.categoryService = categoryService;
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    private SimpleResponse saveCategory(@RequestBody CategoryRequest categoryRequest) {
+    public SimpleResponse saveCategory(@RequestBody CategoryRequest categoryRequest) {
         return categoryService.saveCategory(categoryRequest);
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_CHEF","ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @GetMapping
-    private List<CategoryResponse> getAllCategories(){
+    public List<CategoryResponse> getAllCategories(){
         return categoryService.getAllCategories();
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{categoryId}")
     public CategoryResponseById getCategoryById(@PathVariable Long categoryId) {
         return categoryService.getCategoriesById(categoryId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{categoryId}")
     public SimpleResponse deleteCategoryById(@PathVariable Long categoryId){
         return categoryService.deleteCategoriesBiId(categoryId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{categoryId}")
     public SimpleResponse updateCategory(@RequestBody Category category, @PathVariable Long categoryId){
         return categoryService.updateCategory(categoryId,category);

@@ -5,11 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 import peaksoft.dto.response.subCategoryResponse.SubCategoryResponseById;
 import peaksoft.dto.response.subCategoryResponse.SubCategoryResponseGroupCategory;
 import peaksoft.dto.response.subCategoryResponse.SubcategoryResponse;
-import peaksoft.entity.Category;
 import peaksoft.entity.SubCategory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**

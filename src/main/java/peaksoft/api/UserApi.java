@@ -1,8 +1,8 @@
 package peaksoft.api;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.AuthRequest;
 import peaksoft.dto.request.UserAcceptRequest;
@@ -31,47 +31,50 @@ public class UserApi {
     }
 
     @PostMapping("/login")
-    private UserTokenResponse login(@RequestBody @Valid AuthRequest authRequest) {
+    public UserTokenResponse login(@RequestBody @Valid AuthRequest authRequest) {
         return userService.authenticate(authRequest);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
-    private SimpleResponse saveUser(@RequestBody @Valid UserRequest userRequest) {
+    public SimpleResponse saveUser(@RequestBody @Valid UserRequest userRequest) {
         return userService.saveUser(userRequest);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
-    private List<UserResponse> getAllUsers(){
+    public List<UserResponse> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{userId}")
     public UserResponseById getUserById(@PathVariable Long userId) {
         return userService.getUserById(userId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{userId}")
-    public SimpleResponse deleteUserById(@PathVariable Long userId){
+    public SimpleResponse deleteUserById(@PathVariable Long userId) {
         return userService.deleteUserById(userId);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{userId}")
-    public SimpleResponse updateUser(@RequestBody @Valid UserRequest user, @PathVariable Long userId){
-        return userService.updateUser(userId,user);
+    public SimpleResponse updateUser(@RequestBody @Valid UserRequest user, @PathVariable Long userId) {
+        return userService.updateUser(userId, user);
     }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/apply")
-    public SimpleResponse apply(@RequestBody @Valid UserAcceptRequest userAcceptRequest){
+    public SimpleResponse apply(@RequestBody @Valid UserAcceptRequest userAcceptRequest) {
         return userService.apply(userAcceptRequest);
     }
-    @RolesAllowed("ROLE_ADMIN")
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/accept")
-    public UserAcceptResponse acceptApplication(@RequestParam(required = false) Long id,@RequestParam(required = false) boolean except){
-        return userService.acceptApplication(id,except);
+    public UserAcceptResponse acceptApplication(@RequestParam(required = false) Long id, @RequestParam(required = false) boolean except) {
+        return userService.acceptApplication(id, except);
     }
 
 

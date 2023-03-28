@@ -178,37 +178,4 @@ public class ChequeServiceImpl implements ChequeService {
                 .build();
     }
 
-    @Override
-    public SimpleResponse updateCheque(Long id, ChequeRequest chequeRequest) {
-        int priceAVG = 0;
-        Cheque oldCheque = chequeRepository.findById(id)
-                .orElseThrow(() ->
-                        new NotFoundException("Cheque with id : " + id + " doesn't exist"));
-
-        User user = userRepository.findById(chequeRequest.userId()).orElseThrow(() ->
-                new NotFoundException("User with id : " + chequeRequest.userId() + " doesn't exist"));
-
-        List<MenuItem> menuItems = menuItemRepository.findAllById(chequeRequest.menuItemsIdes());
-        for (MenuItem menuItem : menuItems) {
-            priceAVG += menuItem.getPrice();
-        }
-
-        oldCheque.setPriceAverage(priceAVG);
-        oldCheque.setUser(user);
-        oldCheque.setCreatedAt(LocalDate.now());
-        oldCheque.setMenuItems(menuItems);
-
-        List<MenuItem> menuItem = menuItemRepository.findAllById(chequeRequest.menuItemsIdes());
-        for (MenuItem menu : menuItem) {
-            menu.addCheque(oldCheque);
-            oldCheque.addMenuItems(menu);
-        }
-        chequeRepository.save(oldCheque);
-        return SimpleResponse.builder()
-                .httpStatus(HttpStatus.OK)
-                .message("Check successfully updated...!")
-                .build();
-    }
-
-
 }

@@ -14,7 +14,6 @@ import static jakarta.persistence.CascadeType.*;
 @Table(name = "sub_categories")
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
 @Getter
 @Setter
 @Builder

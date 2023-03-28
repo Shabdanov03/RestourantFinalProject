@@ -20,5 +20,4 @@ public interface ChequeService {
 
     ChequeResponse getChequeById(Long id);
     SimpleResponse deleteChequeById(Long id);
-    SimpleResponse updateCheque(Long id,ChequeRequest chequeRequest);
 }

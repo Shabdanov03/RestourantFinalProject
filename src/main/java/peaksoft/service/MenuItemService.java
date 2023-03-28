@@ -1,18 +1,12 @@
 package peaksoft.service;
 
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import peaksoft.dto.request.MenuItemRequest;
 import peaksoft.dto.response.PaginationResponse;
 import peaksoft.dto.response.SimpleResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemGlobalSearchResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemResponse;
 import peaksoft.dto.response.menuItemResponse.MenuItemResponseById;
-import peaksoft.dto.response.userResponse.UserResponse;
-import peaksoft.dto.response.userResponse.UserResponseById;
 import peaksoft.entity.MenuItem;
-import peaksoft.entity.User;
-
 import java.util.List;
 
 /**

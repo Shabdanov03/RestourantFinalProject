@@ -1,7 +1,7 @@
 package peaksoft.api;
 
-import jakarta.annotation.security.RolesAllowed;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import peaksoft.dto.request.ChequeRequest;
 import peaksoft.dto.request.ChequeRestaurantRequest;
@@ -25,40 +25,33 @@ public class ChequeApi {
         this.chequeService = chequeService;
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','CHIEF','WALTER')")
     @PostMapping
     public SimpleResponse saveCheque(@RequestBody ChequeRequest chequeRequest) {
         return chequeService.saveCheque(chequeRequest);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/waiter")
     public ChequeTotalByWaiterResponse chequeTotalByWaiterResponse(@RequestBody UserWaiterRequestByCheque waiterRequestByCheque) {
         return chequeService.chequeTotalByWaiterResponse(waiterRequestByCheque);
     }
 
-    @RolesAllowed("ROLE_ADMIN")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/total")
     public ChequeTotalResponse restaurantTotalCheck(@RequestBody ChequeRestaurantRequest chequeRestaurantRequest) {
         return chequeService.restaurantTotalCheck(chequeRestaurantRequest);
     }
 
-    @RolesAllowed({"ROLE_ADMIN","ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','WALTER')")
     @GetMapping("/{chequeId}")
     public ChequeResponse getChequeById(@PathVariable Long chequeId) {
         return chequeService.getChequeById(chequeId);
     }
 
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_WALTER"})
+    @PreAuthorize("hasAnyAuthority('ADMIN','WALTER')")
     @DeleteMapping("/{chequeId}")
     public SimpleResponse deleteChequeById(@PathVariable Long chequeId) {
         return chequeService.deleteChequeById(chequeId);
     }
-
-//    @RolesAllowed({"ROLE_ADMIN", "ROLE_WALTER"})
-//    @PutMapping("/{id}")
-//    SimpleResponse updateCheque(@RequestBody ChequeRequest chequeRequest,@PathVariable Long id){
-//        return chequeService.updateCheque(id,chequeRequest);
-//    }
-
 }
