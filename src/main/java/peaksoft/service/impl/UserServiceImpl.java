@@ -1,8 +1,16 @@
 package peaksoft.service.impl;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +33,7 @@ import peaksoft.repository.RestaurantRepository;
 import peaksoft.repository.UserRepository;
 import peaksoft.service.UserService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
@@ -34,6 +43,7 @@ import java.util.List;
  * Shabdanov Ilim
  **/
 @Service
+@Slf4j
 @Transactional
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
@@ -53,6 +63,16 @@ public class UserServiceImpl implements UserService {
 
     @PostConstruct
     public void init() {
+        try {
+            GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new ClassPathResource("gadgetarium.json").getInputStream());
+            FirebaseOptions firebaseOptions = FirebaseOptions.builder()
+                    .setCredentials(googleCredentials)
+                    .build();
+            log.info("successfully works the init method");
+            FirebaseApp firebaseApp = FirebaseApp.initializeApp(firebaseOptions);
+        } catch (IOException e) {
+            log.error("IOException");
+        }
         User user = new User();
         user.setEmail("admin@gmail.com");
         user.setPassword(passwordEncoder.encode("admin"));
@@ -60,7 +80,33 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsByEmail(user.getEmail())) {
             userRepository.save(user);
         }
+
     }
+    public UserTokenResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+        FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+        if (!userRepository.existsByEmail(firebaseToken.getEmail())) {
+            User newUser = new User();
+            String[] name = firebaseToken.getName().split(" ");
+            newUser.setFirstName(name[0]);
+            newUser.setLastName(name[1]);
+            newUser.setEmail(firebaseToken.getEmail());
+            newUser.setPassword(firebaseToken.getEmail());
+            newUser.setRole(Role.WALTER);
+
+            userRepository.save(newUser);
+        }
+        User user = userRepository.findByEmail(firebaseToken.getEmail()).orElseThrow(() -> {
+            log.error(String.format("Пользователь с таким электронным адресом %s не найден!", firebaseToken.getEmail()));
+            throw new NotFoundException(String.format("Пользователь с таким электронным адресом %s не найден!", firebaseToken.getEmail()));
+        });
+        String token = jwtUtil.generateToken(user);
+        log.info("successfully works the authorization with google method");
+        return UserTokenResponse.builder()
+                .email(firebaseToken.getEmail())
+                .token(token)
+                .build();
+    }
+
 
     @Override
     public UserTokenResponse authenticate(AuthRequest authRequest) {

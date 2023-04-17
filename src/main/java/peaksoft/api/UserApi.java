@@ -1,5 +1,7 @@
 package peaksoft.api;
 
+import com.google.firebase.auth.FirebaseAuthException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,6 +15,7 @@ import peaksoft.dto.response.userResponse.UserResponse;
 import peaksoft.dto.response.UserTokenResponse;
 import peaksoft.dto.response.userResponse.UserResponseById;
 import peaksoft.service.UserService;
+import peaksoft.service.impl.UserServiceImpl;
 
 import java.util.List;
 
@@ -24,16 +27,27 @@ import java.util.List;
 public class UserApi {
 
     private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     @Autowired
-    public UserApi(UserService userService) {
+    public UserApi(UserService userService, UserServiceImpl userServiceImpl) {
         this.userService = userService;
+        this.userServiceImpl = userServiceImpl;
     }
 
     @PostMapping("/login")
     public UserTokenResponse login(@RequestBody @Valid AuthRequest authRequest) {
         return userService.authenticate(authRequest);
     }
+
+
+
+    @Operation(summary = "Suthorization with google", description = "You can register by google account")
+    @PostMapping("/auth-google")
+    public UserTokenResponse authWithGoogle(String tokenId) throws FirebaseAuthException {
+        return userServiceImpl.authWithGoogle(tokenId);
+    }
+
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
